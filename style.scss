@@ -1,0 +1,309 @@
+@import url('https://cdn.jsdelivr.net/gh/fonts-archive/AppleSDGothicNeo/AppleSDGothicNeo.css');
+@import url("https://use.typekit.net/qkl3crn.css");
+
+
+$black: #000;
+$white: #fff;
+$aquamarine: #84fbcc;
+
+$page-padding-top: calc(1.95% / 2); //page의 부모요소인 book 기준으로 적용. 나누기 전이 page에서 비율.
+$page-padding-right: calc(3.4% / 2);
+$page-padding-bottom: calc(2.9% / 2);
+$page-padding-left: calc(6.3% / 2);
+
+$gap: 2rem;
+
+html{
+    font-size: 14px;
+}
+
+* {
+    margin: 0;
+    box-sizing: border-box;
+
+    line-height: 1.7rem;
+    font-family: 'Apple SD Gothic Neo';
+    font-weight: 700;
+    word-break: keep-all;
+    word-spacing: -0.02rem;
+}
+
+a{
+    color: $black;
+    text-decoration: none;
+
+    &:hover{
+        color: $aquamarine;
+    }
+    &:after{
+        color: $black;
+        text-decoration: none; 
+    }
+}
+
+body{
+    width: 100%;
+    height: 100vh;
+    position: relative;
+    background-color: $black;
+    overflow: hidden;
+}
+
+.book{
+    position: absolute;
+    top: 50%;
+    left: 15%;
+    transform: translate(-50%, -50%);
+
+    width: 156%;
+    height: 80%;
+    transform-style: preserve-3d;
+}
+
+
+// 전반적인 페이지 관리
+.page{
+    width: 50%;
+    height: 100%;
+    background-color: #fff;
+    position: absolute;
+    top: 0;
+    right: 0;
+    transition: transform 1s;
+    box-sizing: border-box;
+
+    display: grid;
+    grid-template-columns: 1fr 2fr 3fr;
+    grid-template-rows: 100%;
+    gap: $gap;
+
+    visibility: hidden;
+
+    &:nth-child(odd){
+        background: linear-gradient(-90deg, rgba(255,255,255,1) 93%, rgba(128,128,128,1) 100%);
+    }
+    &:nth-child(even){
+        background: linear-gradient(90deg, rgba(255,255,255,1) 93%, rgba(128,128,128,1) 100%);
+    }
+}
+
+.page.visible {
+    visibility: visible;
+}
+
+
+@for $i from 1 through 200 {
+    .page:nth-child(#{$i}) {
+        @if $i % 2 == 1 {
+            padding: $page-padding-top $page-padding-right $page-padding-bottom $page-padding-left;
+            transform-origin: 0% 50%;
+            transform: translatez(-1px * $i);
+        } @else {
+            padding: $page-padding-top $page-padding-right $page-padding-bottom $page-padding-left;
+            transform-origin: 100% 50%;
+            transform: translatez(-1px * $i) scalex(-1) translatex(100%);
+        }
+    }
+    .left-side:nth-child(#{$i}) {
+        @if $i % 2 == 1 {
+            transform: translatez(1px * $i) rotatey(-180deg);
+        } @else {
+            transform: translatez(1px * $i) scalex(-1) translatex(100%) rotatey(180deg);
+        }
+    }
+}
+
+// 특수 페이지
+.preface-page{
+    grid-template-columns: 1fr 3fr 2fr;
+    gap: $gap;
+
+    p{
+        margin-bottom: 1rem;
+    }
+
+    .poster{
+        position: absolute;
+        top: 50%;
+        left: 17%;
+        width: 40%;
+        height: auto;
+        transform: rotate(10deg) translateY(-50%);
+        box-shadow: 0.5rem 0.5rem 1rem rgb(0, 0, 0, 0.6);
+        animation: posterAnimation 0.7s ease-out forwards;
+        overflow: hidden;
+
+        img{
+            width: 100%;
+            margin: 0;
+            vertical-align: bottom;
+        }
+        .fold{
+            width: 20%;
+            aspect-ratio: 1 / 1;
+            position: absolute;
+            bottom:0;
+            left:0;
+            transform-origin: left bottom;
+            animation: unfold 0.7s ease-out forwards;
+
+            img{
+                width: 100%;
+            }
+        }
+    }
+}
+
+.index-page{
+    grid-template-columns: 1fr 1fr 2fr 2fr;
+    gap: $gap;
+    
+    .table-container{
+        overflow-y: scroll;
+    }
+}
+
+
+// 페이지 개별 요소
+.page-header{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    .page-number{
+        width: 100%;
+        height: 16rem;
+        
+        display: flex;
+        justify-content: center;
+
+        font-family: "jetlab-variable", sans-serif;
+        font-weight: 400;
+        font-variation-settings: 'THRU' 50, 'VERT' 50, 'HORZ' 0, 'LIFT' 100;
+        font-size: 20rem;
+        line-height: 1.1;
+    }
+}
+
+.page-content-text{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.page-content-image{
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow-y: scroll;
+
+    img{
+        width: 100%;
+        margin-bottom: 1rem;
+
+        &:last-child{
+            margin-bottom: 0;
+        }
+    }
+}
+
+table{
+    width: 100%;
+    border-collapse: collapse;
+    tr{
+        height: 1.83rem;
+        padding: 0;
+
+        &:hover{
+            color: $aquamarine;
+            cursor: pointer;
+        }
+    }
+    td{
+        border-bottom: 1px solid #000;
+        line-height: 1.6;
+        vertical-align: top;
+        padding: 0;
+
+        &:nth-child(1){
+            width: 2.5rem;
+        }
+        &:nth-child(2){
+            width: 4.4rem;
+        }
+    }
+    #tr-39, #tr-51{
+        height: 3.66rem;
+    }
+}
+
+
+// 이외
+.index-paper{
+    width: 6%;
+    height: 16%;
+    background-color: $aquamarine;
+
+    position: absolute;
+    top: 14%;
+    right: -6%;
+
+    padding: 0.5rem;
+    display: flex;
+    justify-content: center;
+
+    cursor: pointer;
+
+    &:hover{
+        background-color: #dddddd;
+    }
+}
+
+.mobile-notice{
+    position: absolute;
+    top:0;
+    left:0;
+    width: 100%;
+    height: 100%;
+    background-color: $black;
+    color: $white;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+
+    display: none;
+}
+
+footer{
+    color: #808080;
+    position: fixed;
+    bottom: 0;
+}
+
+@keyframes posterAnimation {
+    0% {
+        transform: scale(3) rotate(-20deg) translateY(-50%);
+        left: 80%;
+        border-bottom-left-radius: 28%;
+    }
+    100% {
+        transform: scale(1) rotate(10deg) translateY(-50%);
+        left: 17%;
+        border-bottom-left-radius: 0;
+    }
+}
+
+@keyframes unfold {
+    0% {
+        transform: scale(1);
+    }
+    100% {
+        transform: scale(0);
+    }
+}
+
+@media screen and (max-width: 720px){
+    .mobile-notice{
+        display: flex;
+    }
+}
